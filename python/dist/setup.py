@@ -34,9 +34,6 @@ def GetVersion():
 current_dir = os.path.dirname(os.path.abspath(__file__))
 extra_link_args = ["-Wl,--version-script=python/version_script.lds"]
 
-if sys.platform.startswith('win'):
-  extra_link_args = ['-static']
-
 # If at some point the fasttable decoder is ready for prime time, we could
 # enable it here. But even then we'll need to disable it on platforms where
 # it will not work (eg. 32-bit, MSVC).
