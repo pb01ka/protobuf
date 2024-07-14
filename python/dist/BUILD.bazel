@@ -399,7 +399,6 @@ py_wheel(
         "src/",
     ],
     target_compatible_with = select({
-        "@system_python//:none": ["@platforms//:incompatible"],
         "//conditions:default": [],
     }),
     version = PROTOBUF_PYTHON_VERSION,

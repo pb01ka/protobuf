@@ -73,8 +73,6 @@ config_setting(
 )
 
 _message_target_compatible_with = {
-    "@system_python//:none": ["@platforms//:incompatible"],
-    "@system_python//:unsupported": ["@platforms//:incompatible"],
     "//conditions:default": [],
 }
 
