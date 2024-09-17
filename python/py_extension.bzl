@@ -16,7 +16,10 @@ def py_extension(name, srcs, copts, deps = [], **kwargs):
     cc_binary(
         name = name + "_binary",
         srcs = srcs,
-        copts = copts + ["-fvisibility=hidden"],
+        copts = copts + select({
+            "@platforms//os:windows": [],
+            "//conditions:default": ["-fvisibility=hidden"],
+        }),
         linkopts = selects.with_or({
             (
                 "//python/dist:osx_x86_64",
