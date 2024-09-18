@@ -441,7 +441,7 @@ bool PyUpb_IndexToRange(PyObject* index, Py_ssize_t size, Py_ssize_t* i,
 // Module Entry Point
 // -----------------------------------------------------------------------------
 
-PyMODINIT_FUNC PyInit__message(void) {
+__declspec(dllexport) PyMODINIT_FUNC PyInit__message(void) {
   PyObject* m = PyModule_Create(&module_def);
   if (!m) return NULL;
 

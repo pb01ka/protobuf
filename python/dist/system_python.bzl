@@ -159,12 +159,12 @@ def register_system_python():
 
 def _get_python_version(repository_ctx):
     py_program = "import sys; print(str(sys.version_info.major) + '.' + str(sys.version_info.minor) + '.' + str(sys.version_info.micro))"
-    result = repository_ctx.execute(["python3", "-c", py_program])
+    result = repository_ctx.execute(["PYTHON_EXE", "-c", py_program])
     return (result.stdout).strip().split(".")
 
 def _get_python_path(repository_ctx):
     py_program = "import sysconfig; print(sysconfig.get_config_var('%s'), end='')"
-    result = repository_ctx.execute(["python3", "-c", py_program % ("INCLUDEPY")])
+    result = repository_ctx.execute(["PYTHON_EXE", "-c", py_program % ("INCLUDEPY")])
     if result.return_code != 0:
         return None
     return result.stdout
@@ -219,7 +219,7 @@ def _populate_empty_package(ctx):
 
 def _system_python_impl(repository_ctx):
     path = _get_python_path(repository_ctx)
-    python3 = repository_ctx.which("python3")
+    python3 = "PYTHON_EXE"
     python_version = _get_python_version(repository_ctx)
 
     if path and python_version[0] == "3":
