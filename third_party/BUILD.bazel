@@ -2,5 +2,4 @@ exports_files([
     "BUILD.bazel",
     "jsoncpp.BUILD",
     "rules_fuzzing.patch",
-    "zlib.BUILD",
 ])

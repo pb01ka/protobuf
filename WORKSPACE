@@ -2,6 +2,21 @@ workspace(name = "com_google_protobuf")
 
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
+load("//third_party:repo.bzl", "tf_http_archive", "tf_mirror_urls")
+load("//third_party/systemlibs:syslibs_configure.bzl", "syslibs_configure")
+load("//third_party/absl:workspace.bzl", absl = "repo")
+
+syslibs_configure(name = "local_config_syslibs")
+absl()
+tf_http_archive(
+    name = "zlib",
+    # build_file = "//third_party:zlib.BUILD",
+    sha256 = "9a93b2b7dfdac77ceba5a558a580e74667dd6fede4585b91eefb60f03b72df23",
+    # strip_prefix = "zlib-1.3.1",
+    system_build_file = "//third_party/systemlibs:zlib.BUILD",
+    urls = tf_mirror_urls("https://zlib.net/fossils/zlib-1.3.1.tar.gz"),
+)
+
 # Load common dependencies first to ensure we use the correct version
 load("//:protobuf_deps.bzl", "PROTOBUF_MAVEN_ARTIFACTS", "protobuf_deps")
 

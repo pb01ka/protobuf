@@ -71,26 +71,6 @@ def protobuf_deps():
             ],
         )
 
-    if not native.existing_rule("abseil-cpp"):
-        _github_archive(
-            name = "abseil-cpp",
-            repo = "https://github.com/abseil/abseil-cpp",
-            commit = "76bb24329e8bf5f39704eb10d21b9a80befa7c81",  # Abseil LTS 20250512.1
-            integrity = "sha256-jF3/tZRlrthY/Y+cEgf1ljqPmtqNOcwVh392LHtERWA=",
-        )
-
-    if not native.existing_rule("zlib"):
-        http_archive(
-            name = "zlib",
-            build_file = Label("//third_party:zlib.BUILD"),
-            sha256 = "38ef96b8dfe510d42707d9c781877914792541133e1870841463bfa73f883e32",
-            strip_prefix = "zlib-1.3.1",
-            urls = [
-                "https://github.com/madler/zlib/releases/download/v1.3.1/zlib-1.3.1.tar.xz",
-                "https://zlib.net/zlib-1.3.1.tar.xz",
-            ],
-        )
-
     if not native.existing_rule("jsoncpp"):
         _github_archive(
             name = "jsoncpp",

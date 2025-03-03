@@ -19,6 +19,13 @@ package(
     default_visibility = ["//python/dist:__pkg__"],
 )
 
+# some other targets expect to find this here
+cc_library(
+    name = "zlib",
+    deps = ["@zlib//:zlib"],
+    visibility = ["//visibility:public"],
+)
+
 LIMITED_API_FLAG_SELECT = {
     ":limited_api_3.10": ["-DPy_LIMITED_API=0x030a0000"],
     "//conditions:default": [],
