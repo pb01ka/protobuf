@@ -297,11 +297,18 @@ struct MessageTraitsImpl {
 template <typename T>
 using MessageTraits = decltype(MessageTraitsImpl::value<T>);
 
+#ifdef __CUDACC__
+struct EnumTraitsImpl {
+  template <typename T>
+  static std::enable_if_t<sizeof(T) != 0> value;
+};
+#else
 struct EnumTraitsImpl {
   struct Undefined;
   template <typename T>
   static Undefined value;
 };
+#endif
 template <typename T>
 using EnumTraits = decltype(EnumTraitsImpl::value<T>);
 
