@@ -128,7 +128,6 @@ SUPPORTED_PYTHON_VERSIONS = [
     "3.11",
     "3.12",
     "3.13",
-    "3.14",
 ]
 
 # TODO: Replace system_python with hermetic_python.
