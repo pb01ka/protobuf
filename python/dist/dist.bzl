@@ -44,6 +44,8 @@ def _get_suffix(ctx, limited_api, python_version):
                 abi = "aarch64-linux-gnu"
             elif cpu == "s390x":
                 abi = "s390x-linux-gnu"
+            elif cpu == "ppc64le":
+                abi = "powerpc64le-linux-gnu"
             else:
                 fail("Unsupported CPU: " + cpu)
         else:
