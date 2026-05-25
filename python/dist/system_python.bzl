@@ -157,14 +157,14 @@ def register_system_python():
     pass
 """
 
-def _get_python_version(repository_ctx):
+def _get_python_version(repository_ctx, python_exe):
     py_program = "import sys; print(str(sys.version_info.major) + '.' + str(sys.version_info.minor) + '.' + str(sys.version_info.micro))"
-    result = repository_ctx.execute(["python3", "-c", py_program])
+    result = repository_ctx.execute([python_exe, "-c", py_program])
     return (result.stdout).strip().split(".")
 
-def _get_python_path(repository_ctx):
+def _get_python_path(repository_ctx, python_exe):
     py_program = "import sysconfig; print(sysconfig.get_config_var('%s'), end='')"
-    result = repository_ctx.execute(["python3", "-c", py_program % ("INCLUDEPY")])
+    result = repository_ctx.execute([python_exe, "-c", py_program % ("INCLUDEPY")])
     if result.return_code != 0:
         return None
     return result.stdout
@@ -218,9 +218,17 @@ def _populate_empty_package(ctx):
     ctx.file("fuzzing_py.bzl", _mock_fuzzing_py)
 
 def _system_python_impl(repository_ctx):
-    path = _get_python_path(repository_ctx)
-    python3 = repository_ctx.which("python3")
-    python_version = _get_python_version(repository_ctx)
+    interpreter = repository_ctx.attr.python_interpreter
+
+    # If the caller supplied an absolute path use it directly; otherwise
+    # resolve the name through PATH so that conda / venv prefixes are honoured.
+    if interpreter.startswith("/"):
+        python3 = interpreter
+    else:
+        python3 = repository_ctx.which(interpreter)
+
+    path = _get_python_path(repository_ctx, python3 or interpreter)
+    python_version = _get_python_version(repository_ctx, python3 or interpreter)
 
     if path and python_version[0] == "3":
         _populate_package(repository_ctx, path, python3, python_version)
@@ -270,6 +278,12 @@ system_python = repository_rule(
     local = True,
     attrs = {
         "minimum_python_version": attr.string(default = "3.10"),
+        "python_interpreter": attr.string(
+            default = "python3",
+            doc = "Path or name of the Python 3 interpreter to use. " +
+                  "May be an absolute path (e.g. /usr/bin/python3) or a " +
+                  "bare executable name resolved via PATH (e.g. python3).",
+        ),
     },
 )
 
@@ -279,11 +293,17 @@ def _system_python_extension(ctx):
             system_python(
                 name = py.name,
                 minimum_python_version = py.minimum,
+                python_interpreter = py.python_interpreter,
             )
 
 find = tag_class(attrs = {
     "name": attr.string(doc = "Supported versions of python to find"),
     "minimum": attr.string(),
+    "python_interpreter": attr.string(
+        default = "python3",
+        doc = "Path or name of the Python 3 interpreter. May be absolute or a " +
+              "bare name resolved via PATH.",
+    ),
 })
 
 system_python_extension = module_extension(
